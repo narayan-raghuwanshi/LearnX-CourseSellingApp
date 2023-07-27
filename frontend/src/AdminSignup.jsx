@@ -1,10 +1,12 @@
 import { Button, TextField, Typography } from "@mui/material";
 import Card from "@mui/material/Card";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 function AdminSignup() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [secretKEY, setSecretKEY] = useState("");
+  const navigate = useNavigate();
   return (
     <div
       style={{
@@ -21,7 +23,6 @@ function AdminSignup() {
         </Typography>
         <TextField
           style={{ margin: "6px", width: "250px" }}
-          id="standard-basic"
           label="Email"
           variant="standard"
           onChange={(e)=>{
@@ -31,7 +32,6 @@ function AdminSignup() {
         <br />
         <TextField
           style={{ margin: "6px", width: "250px" }}
-          id="standard-basic"
           label="Password"
           variant="standard"
           onChange={(e)=>{
@@ -41,7 +41,6 @@ function AdminSignup() {
         <br />
         <TextField
           style={{ margin: "6px", width: "250px" }}
-          id="standard-basic"
           label="Admin Key"
           variant="standard"
           onChange={(e)=>{
@@ -67,7 +66,10 @@ function AdminSignup() {
               .then((res) => {
                 res.json().then(data => {
                   localStorage.setItem("adminToken", data.token);
-                  window.location = (data.token!== undefined)? "/courses":"/signin";
+                  alert(data.message);
+                  if(data.message==='Admin created successfully'){
+                    navigate("/signin")
+                  }
                 })
               })
           }}

@@ -30,7 +30,6 @@ function AdminSignin() {
         <br />
         <TextField
           style={{ margin: "6px", width: "250px" }}
-          id="standard-basic"
           label="Password"
           variant="standard"
           onChange={(e) => {

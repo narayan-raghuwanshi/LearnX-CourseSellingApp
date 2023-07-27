@@ -1,9 +1,11 @@
 import { Button, TextField, Typography } from "@mui/material";
 import Card from "@mui/material/Card";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 function UserSignup(){
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const navigate = useNavigate();
     return <div
     style={{
       marginTop: "200px",
@@ -19,7 +21,6 @@ function UserSignup(){
       </Typography>
       <TextField
         style={{ margin: "6px", width: "250px" }}
-        id="standard-basic"
         label="Email"
         variant="standard"
         onChange={(e)=>{
@@ -29,7 +30,6 @@ function UserSignup(){
       <br />
       <TextField
         style={{ margin: "6px", width: "250px" }}
-        id="standard-basic"
         label="Password"
         variant="standard"
         onChange={(e)=>{
@@ -54,7 +54,10 @@ function UserSignup(){
             .then((res) => {
               res.json().then(data => {
                 localStorage.setItem("userToken", data.token);
-                window.location = (data.token!== undefined)? "/userallcourses":"/usersignin";
+                alert(data.message);
+                if(data.message==='User created successfully'){
+                  navigate("/usersignin")
+                }
               })
             })
         }}

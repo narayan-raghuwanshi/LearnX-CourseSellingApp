@@ -21,13 +21,14 @@ try {
   COURSES = [];
 }
 
-const SECRET = 'my-secret-key';
+const ADMINSECRET = 'admin-secret-key';
+const USERSECRET = 'user-secret-key';
 
-const authenticateJwt = (req, res, next) => {
+const authenticateAdminJwt = (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (authHeader) {
-    const token = authHeader.split(' ')[1];
-    jwt.verify(token, SECRET, (err, user) => {
+    const adminToken = authHeader.split(' ')[1];
+    jwt.verify(adminToken, ADMINSECRET, (err, user) => {
       if (err) {
         return res.sendStatus(403);
       }
@@ -38,12 +39,27 @@ const authenticateJwt = (req, res, next) => {
     res.sendStatus(401);
   }
 };
-app.get("/admin/me", authenticateJwt, (req, res) => {
+const authenticateUserJwt = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (authHeader) {
+    const userToken = authHeader.split(' ')[1];
+    jwt.verify(userToken, USERSECRET, (err, user) => {
+      if (err) {
+        return res.sendStatus(403);
+      }
+      req.user = user;
+      next();
+    });
+  } else {
+    res.sendStatus(401);
+  }
+};
+app.get("/admin/me", authenticateAdminJwt, (req, res) => {
   res.json({
     username: req.user.username
   })
 })
-app.get("/user/me", authenticateJwt, (req, res) => {
+app.get("/user/me", authenticateUserJwt, (req, res) => {
   res.json({
     username: req.user.username
   })
@@ -51,7 +67,7 @@ app.get("/user/me", authenticateJwt, (req, res) => {
 // Admin routes
 app.post('/admin/signup', (req, res) => {
   const username = req.body.username;
-  const password = req.body.username;
+  const password = req.body.password;
   const secretKEY = req.body.secretKEY;
   if(secretKEY==='adminKEY'){
     const admin = ADMINS.find(a => a.username === username);
@@ -83,7 +99,7 @@ app.post('/admin/login', (req, res) => {
 
 
 
-app.post('/admin/courses', authenticateJwt, (req, res) => {
+app.post('/admin/courses', authenticateAdminJwt, (req, res) => {
   const course = req.body;
   course.id = COURSES.length + 1;
   COURSES.push(course);
@@ -91,7 +107,7 @@ app.post('/admin/courses', authenticateJwt, (req, res) => {
   res.json({ message: 'Course created successfully', courseId: course.id });
 });
 
-app.put('/admin/courses/:courseId', authenticateJwt, (req, res) => {
+app.put('/admin/courses/:courseId', authenticateAdminJwt, (req, res) => {
   const course = COURSES.find(c => c.id === parseInt(req.params.courseId));
   if (course) {
     Object.assign(course, req.body);
@@ -102,16 +118,16 @@ app.put('/admin/courses/:courseId', authenticateJwt, (req, res) => {
   }
 });
 
-app.get('/admin/courses', authenticateJwt, (req, res) => {
+app.get('/admin/courses', authenticateAdminJwt, (req, res) => {
   res.json({ courses: COURSES });
 });
 
-app.get('/admin/course/:courseId', authenticateJwt, (req, res) => {
+app.get('/admin/course/:courseId', authenticateAdminJwt, (req, res) => {
   const course = COURSES.find(course => course.id === parseInt(req.params.courseId))
   res.json(course)
 });
 
-app.delete('/admin/courseDelete/:courseId', authenticateJwt,(req,res) => {
+app.delete('/admin/courseDelete/:courseId', authenticateAdminJwt,(req,res) => {
   const courseIndex = COURSES.findIndex(c => c.id === parseInt(req.params.courseId));
   if (courseIndex!==-1) {
     COURSES.splice(courseIndex, 1);
@@ -148,16 +164,16 @@ app.post('/users/login', (req, res) => {
   }
 });
 
-app.get('/users/courses', authenticateJwt, (req, res) => {
+app.get('/users/courses', authenticateUserJwt, (req, res) => {
   res.json({ courses: COURSES });
 });
 
-app.get('/users/course/:courseId', authenticateJwt, (req, res) => {
+app.get('/users/course/:courseId', authenticateUserJwt, (req, res) => {
   const course = COURSES.find(course => course.id === parseInt(req.params.courseId))
   res.json(course)
 });
 
-app.post('/users/courses/:courseId', authenticateJwt, (req, res) => {
+app.post('/users/courses/:courseId', authenticateUserJwt, (req, res) => {
   const course = COURSES.find(c => c.id === parseInt(req.params.courseId));
   if (course) {
     const user = USERS.find(u => u.username === req.user.username);
@@ -176,7 +192,7 @@ app.post('/users/courses/:courseId', authenticateJwt, (req, res) => {
   }
 });
 
-app.get('/users/purchasedCourses', authenticateJwt, (req, res) => {
+app.get('/users/purchasedCourses', authenticateUserJwt, (req, res) => {
   const user = USERS.find(u => u.username === req.user.username);
   if (user) {
     res.json({ purchasedCourses: user.purchasedCourses || [] });

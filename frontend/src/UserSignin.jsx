@@ -19,7 +19,6 @@ function UserSignin(){
       </Typography>
       <TextField
         style={{ margin: "6px", width: "250px" }}
-        id="standard-basic"
         label="Email"
         variant="standard"
         onChange={(e) => {
@@ -29,7 +28,6 @@ function UserSignin(){
       <br />
       <TextField
         style={{ margin: "6px", width: "250px" }}
-        id="standard-basic"
         label="Password"
         variant="standard"
         onChange={(e) => {
