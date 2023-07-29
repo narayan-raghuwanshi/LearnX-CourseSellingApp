@@ -39,7 +39,8 @@ function UserPurchasedCourses() {
                 marginTop: "10px",
                 display: "flex",
                 flexWrap: "wrap",
-                justifyContent: "center"
+                justifyContent: "center",
+                flexDirection:"row"
             }}>
 
             {courses.map(eachCourse => {
@@ -61,6 +62,7 @@ function EachCourse(props) {
                     flexDirection: "column",
                     alignItems: "center",
                     width: "280px",
+                    height:"300px",
                     margin: "30px",
                 }}
                 onClick={() => {

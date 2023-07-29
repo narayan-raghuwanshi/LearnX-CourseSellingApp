@@ -10,7 +10,7 @@ function UserAppbar() {
     const { setIsAdminAppbarVisible } = useContext(AdminAppbarContext);
     const { setIsUserAppbarVisible } = useContext(UserAppbarContext);
     useEffect(() => {
-        fetch("http://localhost:3000/user/me", {
+        fetch("http://localhost:3000/users/me", {
             method: "GET",
             headers: {
                 Authorization: "Bearer " + localStorage.getItem("userToken")
