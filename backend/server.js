@@ -78,7 +78,7 @@ app.post('/admin/signup', (req, res) => {
       const newAdmin = { username, password };
       ADMINS.push(newAdmin);
       fs.writeFileSync('admins.json', JSON.stringify(ADMINS));
-      const token = jwt.sign({ username, role: 'admin' }, SECRET, { expiresIn: '1h' });
+      const token = jwt.sign({ username, role: 'admin' }, ADMINSECRET, { expiresIn: '1h' });
       res.json({ message: 'Admin created successfully', token });
     }
   }else{
@@ -90,7 +90,7 @@ app.post('/admin/login', (req, res) => {
   const { username, password } = req.headers;
   const admin = ADMINS.find(a => a.username === username && a.password === password);
   if (admin) {
-    const token = jwt.sign({ username, role: 'admin' }, SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ username, role: 'admin' }, ADMINSECRET, { expiresIn: '1h' });
     res.json({ message: 'Logged in successfully', token });
   } else {
     res.status(403).json({ message: 'Invalid username or password' });
@@ -148,7 +148,7 @@ app.post('/users/signup', (req, res) => {
     const newUser = { username, password };
     USERS.push(newUser);
     fs.writeFileSync('users.json', JSON.stringify(USERS));
-    const token = jwt.sign({ username, role: 'user' }, SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ username, role: 'user' }, USERSECRET, { expiresIn: '1h' });
     res.json({ message: 'User created successfully', token });
   }
 });
@@ -157,7 +157,7 @@ app.post('/users/login', (req, res) => {
   const { username, password } = req.headers;
   const user = USERS.find(u => u.username === username && u.password === password);
   if (user) {
-    const token = jwt.sign({ username, role: 'user' }, SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ username, role: 'user' }, USERSECRET, { expiresIn: '1h' });
     res.json({ message: 'Logged in successfully', token });
   } else {
     res.status(403).json({ message: 'Invalid username or password' });
@@ -177,13 +177,19 @@ app.post('/users/courses/:courseId', authenticateUserJwt, (req, res) => {
   const course = COURSES.find(c => c.id === parseInt(req.params.courseId));
   if (course) {
     const user = USERS.find(u => u.username === req.user.username);
+    const coursePurchased = user.purchasedCourses.findIndex(c => c.id === course.id)
     if (user) {
       if (!user.purchasedCourses) {
         user.purchasedCourses = [];
+      }else{
+        if(coursePurchased !== -1){
+          res.json({message: 'Course Already Purchased'});
+        }else{
+          user.purchasedCourses.push(course);
+          fs.writeFileSync('users.json', JSON.stringify(USERS));
+          res.json({ message: 'Course purchased successfully' });
+        }
       }
-      user.purchasedCourses.push(course);
-      fs.writeFileSync('users.json', JSON.stringify(USERS));
-      res.json({ message: 'Course purchased successfully' });
     } else {
       res.status(403).json({ message: 'User not found' });
     }
