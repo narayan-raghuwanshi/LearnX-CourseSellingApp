@@ -35,7 +35,7 @@ router.post('/signup', (req, res) => {
 });
 
 router.post('/login', (req, res) => {
-    const { username, password } = req.headers;
+    const { username, password } = req.body;
     const admin = ADMINS.find(a => a.username === username && a.password === password);
     if (admin) {
         const token = jwt.sign({ username, role: 'admin' }, ADMINSECRET, { expiresIn: '1h' });

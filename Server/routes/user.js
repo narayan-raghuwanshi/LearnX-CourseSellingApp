@@ -27,7 +27,7 @@ router.post('/signup', (req, res) => {
 });
 
 router.post('/login', (req, res) => {
-    const { username, password } = req.headers;
+    const { username, password } = req.body;
     const user = USERS.find(u => u.username === username && u.password === password);
     if (user) {
         const token = jwt.sign({ username, role: 'user' }, USERSECRET, { expiresIn: '1h' });

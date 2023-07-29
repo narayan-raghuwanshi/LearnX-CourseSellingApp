@@ -1,6 +1,7 @@
 import { Button, TextField, Typography } from "@mui/material";
 import Card from "@mui/material/Card";
 import { useState } from "react";
+import axios from 'axios';
 function UserSignin(){
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -42,21 +43,14 @@ function UserSignin(){
           width: "120px",
           background: "#1b4332e6",
         }}
-        onClick={() => {
-          fetch("http://localhost:3000/users/login", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "username": username,
-              "password": password
-            }
+        onClick={async () => {
+          const response = await axios.post("http://localhost:3000/users/login", {
+            username,
+            password
           })
-            .then((res) => {
-              res.json().then(data => {
-                localStorage.setItem("userToken", data.token);
-                window.location = (data.token!== undefined)? "/userallcourses":"/usersignin";
-              })
-            })
+          let data = response.data;
+          localStorage.setItem("userToken", data.token);
+          window.location = (data.token!== undefined)? "/userallcourses":"/usersignin";
         }}
       >
         Login

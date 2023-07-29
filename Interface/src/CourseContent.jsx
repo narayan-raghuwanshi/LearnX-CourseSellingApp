@@ -2,17 +2,18 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Button, TextField, Typography } from "@mui/material";
 import Card from "@mui/material/Card";
+import axios from 'axios';
 function CourseContent(){
     const courseId = localStorage.getItem("currentCourseId");
     const [course, setCourse] = useState({});
     useEffect(() => {
-        fetch(`http://localhost:3000/users/course/${courseId}`, {
-            method: "GET",
+        axios.get(`http://localhost:3000/users/course/${courseId}`,{
             headers: {
                 "Authorization": "Bearer " + localStorage.getItem("userToken")
             }
-        }).then(res => {
-            res.json().then(data => { setCourse(data) })
+        }).then((response)=>{
+            let data = response.data;
+            setCourse(data)
         })
     }, [])
     return <div>

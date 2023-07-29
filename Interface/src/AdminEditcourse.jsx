@@ -5,6 +5,7 @@ import Switch from "@mui/material/Switch";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import DeleteIcon from '@mui/icons-material/Delete';
+import axios from 'axios';
 import {
     RecoilRoot,
     atom,
@@ -22,15 +23,14 @@ function AdminEditcourse() {
         fetchCourse(courseId);
     }, [])
 
-    function fetchCourse(courseId) {
-        fetch(`http://localhost:3000/admin/course/${courseId}`, {
-            method: "GET",
+    const fetchCourse = async (courseId) => {
+        const response = await axios.get(`http://localhost:3000/admin/course/${courseId}`, {
             headers: {
                 "Authorization": "Bearer " + localStorage.getItem("adminToken")
             }
-        }).then(res => {
-            res.json().then(data => { setCourse(data) })
         })
+        let data = response.data;
+        setCourse(data);
     }
     return (
         <div
@@ -96,14 +96,14 @@ function CourseDetails() {
         </Card>
     )
 }
-function CourseEditSection({fetchCourse,courseId }) {
+function CourseEditSection({ fetchCourse, courseId }) {
     console.log("Update");
     const course = useRecoilValue(courseState);
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
-    const [imageLink, setImageLink] = useState("");
-    const [price, setPrice] = useState("");
-    const [published, setPublished] = useState(false);
+    const [title, setTitle] = useState(course.title);
+    const [description, setDescription] = useState(course.description);
+    const [imageLink, setImageLink] = useState(course.imageLink);
+    const [price, setPrice] = useState(course.price);
+    const [published, setPublished] = useState(course.published);
     const navigate = useNavigate();
     return (
         <div
@@ -137,7 +137,7 @@ function CourseEditSection({fetchCourse,courseId }) {
                     onChange={(e) => {
                         setTitle(e.target.value);
                     }}
-                    placeholder={course.title}
+                    value={title}
                     label="New Title"
                     variant="outlined"
                 />
@@ -150,7 +150,7 @@ function CourseEditSection({fetchCourse,courseId }) {
                     onChange={(e) => {
                         setDescription(e.target.value);
                     }}
-                    placeholder={course.description}
+                    value={description}
                     label="New Description"
                     variant="outlined"
                 />
@@ -163,7 +163,7 @@ function CourseEditSection({fetchCourse,courseId }) {
                     onChange={(e) => {
                         setPrice(e.target.value);
                     }}
-                    placeholder={course.price}
+                    value={price}
                     label="New Price"
                     variant="outlined"
                 />
@@ -173,12 +173,12 @@ function CourseEditSection({fetchCourse,courseId }) {
                         margin: "6px",
                         width: "250px",
                     }}
+                    value={imageLink}
                     onChange={(e) => {
                         setImageLink(e.target.value);
                     }}
                     variant="outlined"
                     label="New Image Link"
-                    placeholder={course.imageLink}
                 />
                 <br />
                 <FormControlLabel
@@ -199,26 +199,20 @@ function CourseEditSection({fetchCourse,courseId }) {
                         background: "#1b4332e6",
                     }}
                     variant="contained"
-                    onClick={() => {
-                        fetch(`http://localhost:3000/admin/courses/${courseId}`, {
-                            method: "PUT",
+                    onClick={async () => {
+                        const response = await axios.put(`http://localhost:3000/admin/courses/${courseId}`, {
+                            title,
+                            description,
+                            imageLink,
+                            price,
+                            published,
                             headers: {
-                                "Content-Type": "application/json",
-                                Authorization: "Bearer " + localStorage.getItem("adminToken"),
-                            },
-                            body: JSON.stringify({
-                                title,
-                                description,
-                                imageLink,
-                                price,
-                                published
-                            }),
-                        }).then((res) =>
-                            res.json().then((data) => {
-                                fetchCourse(courseId);
-                                alert(data.message);
-                            })
-                        );
+                                Authorization: "Bearer " + localStorage.getItem("adminToken")
+                            }
+                        })
+                        let data = response.data;
+                        fetchCourse(courseId);
+                        alert(data.message);
                     }}
                 >
                     Save Changes
@@ -229,19 +223,15 @@ function CourseEditSection({fetchCourse,courseId }) {
                         background: "#ba181b",
                     }}
                     variant="contained"
-                    onClick={() => {
-                        fetch(`http://localhost:3000/admin/courseDelete/${courseId}`, {
-                            method: "DELETE",
+                    onClick={async() => {
+                        const response = await axios.delete(`http://localhost:3000/admin/courseDelete/${courseId}`, {
                             headers: {
-                                "Content-Type": "application/json",
                                 "Authorization": "Bearer " + localStorage.getItem("adminToken")
                             }
-                        }).then(res => {
-                            res.json().then(data => {
-                                alert(data.message);
-                                navigate(-1);
-                            })
                         })
+                        let data = response.data;
+                        alert(data.message);
+                        navigate(-1);
                     }}
                 >
                     <DeleteIcon></DeleteIcon>

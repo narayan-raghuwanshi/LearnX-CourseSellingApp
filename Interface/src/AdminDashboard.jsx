@@ -3,21 +3,20 @@ import Card from "@mui/material/Card";
 import { useEffect, useState } from "react";
 import Addcourse from "./AdminAddcourse";
 import { Navigate, useNavigate } from "react-router-dom";
+import axios from 'axios';
 function AdminDashboard() {
     const [courses, setCourses] = useState([]);
     const [createCourseButton, setCreateCourseButton] = useState();
     useEffect(() => {
-        fetch("http://localhost:3000/admin/courses/", {
-            method: "GET",
-            headers: {
-                Authorization: "Bearer " + localStorage.getItem("adminToken"),
-            },
-        }).then((res) => {
-            res.json().then((data) => {
-                setCourses(data.courses);
-                setCreateCourseButton(<CreateCourseButton></CreateCourseButton>);
-            });
-        });
+        axios.get("http://localhost:3000/admin/courses/",{
+            headers:{
+                Authorization: "Bearer " + localStorage.getItem("adminToken")
+            }
+        }).then((response)=>{
+            let data = response.data;
+            setCourses(data.courses);
+            setCreateCourseButton(<CreateCourseButton></CreateCourseButton>);
+        })
     }, []);
     return <div><div
         style={{

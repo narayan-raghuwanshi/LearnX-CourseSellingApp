@@ -2,6 +2,7 @@ import { Button, TextField, Typography } from "@mui/material";
 import Card from "@mui/material/Card";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 function AdminSignup() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -25,7 +26,7 @@ function AdminSignup() {
           style={{ margin: "6px", width: "250px" }}
           label="Email"
           variant="standard"
-          onChange={(e)=>{
+          onChange={(e) => {
             setUsername(e.target.value);
           }}
         />
@@ -34,7 +35,7 @@ function AdminSignup() {
           style={{ margin: "6px", width: "250px" }}
           label="Password"
           variant="standard"
-          onChange={(e)=>{
+          onChange={(e) => {
             setPassword(e.target.value);
           }}
         />
@@ -43,7 +44,7 @@ function AdminSignup() {
           style={{ margin: "6px", width: "250px" }}
           label="Admin Key"
           variant="standard"
-          onChange={(e)=>{
+          onChange={(e) => {
             setSecretKEY(e.target.value);
           }}
         />
@@ -51,27 +52,18 @@ function AdminSignup() {
         <Button
           style={{ margin: "20px 86px 0px", width: "120px", background: "#1b4332e6" }}
           variant="contained"
-          onClick={() => {
-            fetch("http://localhost:3000/admin/signup", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json"
-              },
-              body:JSON.stringify({
-                username,
-                password,
-                secretKEY
-              })
+          onClick={async () => {
+            const response = await axios.post("http://localhost:3000/admin/signup", {
+              username,
+              password,
+              secretKEY
             })
-              .then((res) => {
-                res.json().then(data => {
-                  localStorage.setItem("adminToken", data.token);
-                  alert(data.message);
-                  if(data.message==='Admin created successfully'){
-                    navigate("/signin")
-                  }
-                })
-              })
+            let data = response.data;
+            localStorage.setItem("adminToken", data.token);
+            alert(data.message);
+            if (data.message === 'Admin created successfully') {
+              navigate("/signin")
+            }
           }}
         >
           Register

@@ -1,6 +1,7 @@
 import { Button, TextField, Typography } from "@mui/material";
 import Card from "@mui/material/Card";
 import { useState } from "react";
+import axios from 'axios';
 function AdminSignin() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -16,7 +17,7 @@ function AdminSignin() {
     >
       <Card style={{ padding: "20px", background: "#b7b7a42b" }}>
         <Typography style={{ margin: "6px" }} variant="h6">
-        Admin Sign In
+          Admin Sign In
         </Typography>
         <TextField
           style={{ margin: "6px", width: "250px" }}
@@ -44,21 +45,14 @@ function AdminSignin() {
             width: "120px",
             background: "#1b4332e6",
           }}
-          onClick={() => {
-            fetch("http://localhost:3000/admin/login", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                "username": username,
-                "password": password
-              }
+          onClick={async () => {
+            const response = await axios.post('http://localhost:3000/admin/login', {
+              username,
+              password
             })
-              .then((res) => {
-                res.json().then(data => {
-                  localStorage.setItem("adminToken", data.token);
-                  window.location = (data.token!== undefined)? "/courses":"/signin";
-                })
-              })
+            let data = response.data;
+            localStorage.setItem("adminToken", data.token);
+            window.location = (data.token !== undefined) ? "/courses" : "/signin";
           }}
         >
           Login

@@ -3,19 +3,18 @@ import Card from "@mui/material/Card";
 import { useEffect, useState } from "react";
 import Addcourse from "./AdminAddcourse";
 import { Navigate, useNavigate } from "react-router-dom";
+import axios from 'axios';
 function UserPurchasedCourses() {
     const [courses, setCourses] = useState([]);
     useEffect(() => {
-        fetch("http://localhost:3000/users/purchasedCourses/", {
-            method: "GET",
+        axios.get("http://localhost:3000/users/purchasedCourses/", {
             headers: {
                 Authorization: "Bearer " + localStorage.getItem("userToken"),
-            },
-        }).then((res) => {
-            res.json().then((data) => {
-                setCourses(data.purchasedCourses);
-            });
-        });
+            }
+        }).then((response) => {
+            let data = response.data;
+            setCourses(data.purchasedCourses)
+        })
     }, []);
     return <div>
         <div
@@ -40,7 +39,7 @@ function UserPurchasedCourses() {
                 display: "flex",
                 flexWrap: "wrap",
                 justifyContent: "center",
-                flexDirection:"row"
+                flexDirection: "row"
             }}>
 
             {courses.map(eachCourse => {
@@ -62,7 +61,7 @@ function EachCourse(props) {
                     flexDirection: "column",
                     alignItems: "center",
                     width: "280px",
-                    height:"300px",
+                    height: "300px",
                     margin: "30px",
                 }}
                 onClick={() => {

@@ -5,6 +5,7 @@ import Addcourse from "./AdminAddcourse";
 import { Navigate, useNavigate } from "react-router-dom";
 import React, { useContext } from 'react';
 import { AdminAppbarContext, UserAppbarContext } from './App';
+import axios from 'axios';
 function UserAllCourses() {
     const [courses, setCourses] = useState([]);
     const { setIsAdminAppbarVisible } = useContext(AdminAppbarContext);
@@ -12,16 +13,14 @@ function UserAllCourses() {
     setIsAdminAppbarVisible(false);
     setIsUserAppbarVisible(true);
     useEffect(() => {
-        fetch("http://localhost:3000/users/courses/", {
-            method: "GET",
+        axios.get("http://localhost:3000/users/courses/",{
             headers: {
                 Authorization: "Bearer " + localStorage.getItem("userToken"),
-            },
-        }).then((res) => {
-            res.json().then((data) => {
-                setCourses(data.courses);
-            });
-        });
+            }
+        }).then((response)=>{
+            let data = response.data;
+            setCourses(data.courses);
+        })
     }, []);
     return <div>
         <div

@@ -3,22 +3,21 @@ import { useEffect, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import React, { useContext } from 'react';
 import { AdminAppbarContext, UserAppbarContext } from './App';
+import axios from 'axios';
 function AdminAppbar() {
     const navigate = useNavigate();
     const [adminEmail, setAdminEmail] = useState();
     const { setIsAdminAppbarVisible } = useContext(AdminAppbarContext);
     const { setIsUserAppbarVisible } = useContext(UserAppbarContext);
     useEffect(() => {
-        fetch("http://localhost:3000/admin/me", {
-            method: "GET",
+        axios.get("http://localhost:3000/admin/me", {
             headers: {
                 Authorization: "Bearer " + localStorage.getItem("adminToken")
-            },
-        }).then((res) => {
-            res.json().then((data) => {
-                setAdminEmail(data.username);
-            });
-        });
+            }
+        }).then((response)=>{
+            let data = response.data;
+            setAdminEmail(data.username);
+        })
     }, []);
     if (adminEmail) {
         return (

@@ -4,6 +4,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 function AdminAddcourse() {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -11,6 +12,11 @@ function AdminAddcourse() {
     const [price, setPrice] = useState("");
     const [published, setPublished] = useState(false);
     const navigate = useNavigate();
+    const authHeader = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("adminToken")}`
+        }
+      };
     return (
         <div>
             <div
@@ -103,26 +109,17 @@ function AdminAddcourse() {
                             background: "#1b4332e6",
                         }}
                         variant="contained"
-                        onClick={() => {
-                            fetch("http://localhost:3000/admin/courses", {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                    Authorization: "Bearer " + localStorage.getItem("adminToken"),
-                                },
-                                body: JSON.stringify({
-                                    title,
-                                    description,
-                                    imageLink,
-                                    price,
-                                    published
-                                }),
-                            }).then((res) =>
-                                res.json().then((data) => {
-                                    alert(data.message);
-                                    navigate(-1);
-                                })
-                            );
+                        onClick={async () => {
+                            const response = await axios.post("http://localhost:3000/admin/courses", {
+                                title,
+                                description,
+                                imageLink,
+                                price,
+                                published
+                            },authHeader)
+                            let data = response.data;
+                            alert(data.message);
+                            navigate(-1);
                         }}
                     >
                         Add

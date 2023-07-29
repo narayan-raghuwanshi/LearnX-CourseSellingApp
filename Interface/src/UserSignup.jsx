@@ -2,6 +2,7 @@ import { Button, TextField, Typography } from "@mui/material";
 import Card from "@mui/material/Card";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 function UserSignup(){
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -40,26 +41,17 @@ function UserSignup(){
       <Button
         style={{ margin: "20px 86px 0px", width: "120px", background: "#1b4332e6" }}
         variant="contained"
-        onClick={() => {
-          fetch("http://localhost:3000/users/signup", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body:JSON.stringify({
-              username,
-              password
-            })
+        onClick={async () => {
+          const response = await axios.post("http://localhost:3000/users/signup", {
+            username,
+            password,
           })
-            .then((res) => {
-              res.json().then(data => {
-                localStorage.setItem("userToken", data.token);
-                alert(data.message);
-                if(data.message==='User created successfully'){
-                  navigate("/usersignin")
-                }
-              })
-            })
+          let data = response.data;
+          localStorage.setItem("userToken", data.token);
+          alert(data.message);
+          if(data.message==='User created successfully'){
+            navigate("/usersignin")
+          }
         }}
       >
         Register
