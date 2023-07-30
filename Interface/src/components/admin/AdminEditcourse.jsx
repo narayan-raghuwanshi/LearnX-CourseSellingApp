@@ -105,6 +105,11 @@ function CourseEditSection({ fetchCourse, courseId }) {
     const [price, setPrice] = useState(course.price);
     const [published, setPublished] = useState(course.published);
     const navigate = useNavigate();
+    const authHeader = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("adminToken")}`
+        }
+      };
     return (
         <div
             style={{
@@ -205,11 +210,8 @@ function CourseEditSection({ fetchCourse, courseId }) {
                             description,
                             imageLink,
                             price,
-                            published,
-                            headers: {
-                                Authorization: "Bearer " + localStorage.getItem("adminToken")
-                            }
-                        })
+                            published
+                        }, authHeader)
                         let data = response.data;
                         fetchCourse(courseId);
                         alert(data.message);

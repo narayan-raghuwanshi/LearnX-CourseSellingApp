@@ -1,1 +1,1 @@
-[{"username":"user@gmail.com","password":"user123"}]
+[{"username":"user@gmail.com","password":"user123","purchasedCourses":[{"title":"Web Development","description":"Master the art of web development with our comprehensive course.","imageLink":"https://th.bing.com/th/id/OIP.V-Jp13LvtVc2IiY2fp4qYwHaD4?w=300&h=180&c=7&r=0&o=5&dpr=1.1&pid=1.7","price":"18","published":true,"id":1}]}]

@@ -2,25 +2,24 @@ import { Button, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import React, { useContext } from 'react';
-import { AdminAppbarContext, UserAppbarContext } from './App';
-import './App.css';
+import { AdminAppbarContext, UserAppbarContext } from '../../App';
 import axios from 'axios';
-function UserAppbar() {
+function AdminAppbar() {
     const navigate = useNavigate();
-    const [userEmail, setUserEmail] = useState();
+    const [adminEmail, setAdminEmail] = useState();
     const { setIsAdminAppbarVisible } = useContext(AdminAppbarContext);
     const { setIsUserAppbarVisible } = useContext(UserAppbarContext);
     useEffect(() => {
-        axios.get("http://localhost:3000/users/me",{
+        axios.get("http://localhost:3000/admin/me", {
             headers: {
-                Authorization: "Bearer " + localStorage.getItem("userToken")
+                Authorization: "Bearer " + localStorage.getItem("adminToken")
             }
         }).then((response)=>{
             let data = response.data;
-            setUserEmail(data.username);
+            setAdminEmail(data.username);
         })
     }, []);
-    if (userEmail) {
+    if (adminEmail) {
         return (
             <div
                 style={{
@@ -40,49 +39,32 @@ function UserAppbar() {
 
                 <div
                     style={{
-                        alignSelf: "center",
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center"
+                        alignSelf: "center"
                     }}
-                >
-                    <Button
-                        variant="text"
-                        style={{
-                            textTransform: "lowercase",
-                            padding: "5px 10px",
-                            borderRadius: "15px",
-                            margin: "0 10px 0 0",
-                            color:"white"
-                        }}
-                        onClick={() => {
-                            navigate("/userallcourses");
-                        }}>
+                ><Button
+                    variant="text"
+                    style={{
+                        textTransform: "lowercase",
+                        padding: "5px 10px",
+                        borderRadius: "15px",
+                        margin: "0 10px 0 0",
+                        color: "white"
+                    }}
+                    onClick={() => {
+                        navigate("/courses");
+                    }}>
                         <Typography>Courses</Typography></Button>
-                    <Button
-                        variant="text"
-                        style={{
-                            textTransform: "lowercase",
-                            padding: "5px 10px",
-                            borderRadius: "15px",
-                            margin: "0 10px 0 0",
-                            color:"white"
-                        }}
-                        onClick={() => {
-                            navigate("/userpurchasedcourses");
-                        }}>
-                        <Typography>purchased</Typography></Button>
                     <Button
                         variant="contained"
                         style={{
                             margin: "20px",
                             width: "110px",
                             background: "#348060b0",
-                            color:"white"
+                            color: "white"
                         }}
                         onClick={() => {
-                            localStorage.setItem("userToken", null);
-                            window.location = "/usersignin"
+                            localStorage.setItem("adminToken", null);
+                            window.location = "/signin"
                         }}
                     >
                         Logout
@@ -113,12 +95,12 @@ function UserAppbar() {
                         alignSelf: "center",
                     }}
                 >
-                    <Button style={{ textDecoration: "none", font: "small-caption",textTransform:"lowercase", fontSize: "1rem", margin: "6px", color: "#26c4ebcf" }}
+                    <Button style={{ textDecoration: "none", font: "small-caption", fontSize: "1rem", margin: "6px", color: "#26c4ebcf", textTransform: "lowercase" }}
                         onClick={() => {
-                            setIsUserAppbarVisible(false);
-                            setIsAdminAppbarVisible(true);
-                            navigate("/signin")
-                        }}><>Login as Admin</></Button>
+                            setIsAdminAppbarVisible(false);
+                            setIsUserAppbarVisible(true);
+                            navigate("/usersignin")
+                        }}><>Login as Student</></Button>
                     <Button
                         variant="outlined"
                         color="inherit"
@@ -128,16 +110,16 @@ function UserAppbar() {
                             color: "white",
                         }}
                         onClick={() => {
-                            navigate("/usersignup");
+                            navigate("/signup");
                         }}
                     >
                         SignUp
                     </Button>
                     <Button
                         variant="contained"
-                        style={{ margin: "20px", width: "110px", background: "#348060b0",color:"white" }}
+                        style={{ margin: "20px", width: "110px", background: "#348060b0", color: "white" }}
                         onClick={() => {
-                            navigate("/usersignin");
+                            navigate("/signin");
                         }}
                     >
                         Login
@@ -147,4 +129,4 @@ function UserAppbar() {
         );
     }
 }
-export default UserAppbar;
+export default AdminAppbar;
