@@ -1,13 +1,10 @@
 import { Button, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import React, { useContext } from 'react';
-import { AdminAppbarContext} from '../../App';
 import axios from 'axios';
 function AdminAppbar() {
     const navigate = useNavigate();
     const [adminEmail, setAdminEmail] = useState();
-    const { setIsAdminAppbarVisible } = useContext(AdminAppbarContext);
     useEffect(() => {
         axios.get("http://localhost:3000/admin/me", {
             headers: {
@@ -94,12 +91,6 @@ function AdminAppbar() {
                         alignSelf: "center",
                     }}
                 >
-                    <Button style={{ textDecoration: "none", font: "small-caption", fontSize: "1rem", margin: "6px", color: "#26c4ebcf", textTransform: "lowercase" }}
-                        onClick={() => {
-                            setIsAdminAppbarVisible(false);
-                            setIsUserAppbarVisible(true);
-                            navigate("/usersignin")
-                        }}><>Login as Student</></Button>
                     <Button
                         variant="outlined"
                         color="inherit"
