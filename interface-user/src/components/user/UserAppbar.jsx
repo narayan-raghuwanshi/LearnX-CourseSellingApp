@@ -2,13 +2,12 @@ import { Button, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import React, { useContext } from 'react';
-import { AdminAppbarContext, UserAppbarContext } from '../../App';
+import {UserAppbarContext } from '../../App';
 import '../../App.css';
 import axios from 'axios';
 function UserAppbar() {
     const navigate = useNavigate();
     const [userEmail, setUserEmail] = useState();
-    const { setIsAdminAppbarVisible } = useContext(AdminAppbarContext);
     const { setIsUserAppbarVisible } = useContext(UserAppbarContext);
     useEffect(() => {
         axios.get("http://localhost:3000/users/me",{

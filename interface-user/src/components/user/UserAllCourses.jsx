@@ -1,16 +1,13 @@
 import { Button, TextField, Typography } from "@mui/material";
 import Card from "@mui/material/Card";
 import { useEffect, useState } from "react";
-import Addcourse from "../admin/AdminAddcourse";
 import { Navigate, useNavigate } from "react-router-dom";
 import React, { useContext } from 'react';
-import { AdminAppbarContext, UserAppbarContext } from '../../App';
+import {UserAppbarContext } from '../../App';
 import axios from 'axios';
 function UserAllCourses() {
     const [courses, setCourses] = useState([]);
-    const { setIsAdminAppbarVisible } = useContext(AdminAppbarContext);
     const { setIsUserAppbarVisible } = useContext(UserAppbarContext);
-    setIsAdminAppbarVisible(false);
     setIsUserAppbarVisible(true);
     useEffect(() => {
         axios.get("http://localhost:3000/users/courses/",{

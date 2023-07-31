@@ -47,7 +47,7 @@ router.post('/login', (req, res) => {
 
 router.post('/courses', authenticateAdminJwt, (req, res) => {
     const course = req.body;
-    course.id = COURSES.length + 1;
+    course.id = Math.floor(Math.random()*1000000);
     COURSES.push(course);
     fs.writeFileSync('courses.json', JSON.stringify(COURSES));
     res.json({ message: 'Course created successfully', courseId: course.id });

@@ -1,7 +1,6 @@
 import { Button, TextField, Typography } from "@mui/material";
 import Card from "@mui/material/Card";
 import { useEffect, useState } from "react";
-import Addcourse from "../admin/AdminAddcourse";
 import { Navigate, useNavigate } from "react-router-dom";
 import axios from 'axios';
 function UserPurchasedCourses() {
