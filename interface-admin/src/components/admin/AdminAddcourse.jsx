@@ -119,7 +119,7 @@ function AdminAddcourse() {
                             },authHeader)
                             let data = response.data;
                             alert(data.message);
-                            navigate(-1);
+                            navigate("/courses");
                         }}
                     >
                         Add

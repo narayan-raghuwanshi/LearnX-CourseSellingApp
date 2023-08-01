@@ -1,5 +1,5 @@
 import { Button, TextField, Typography } from "@mui/material";
-import Card from "@mui/material/Card";
+import {Card}from "@mui/material";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import { useState, useEffect } from "react";
@@ -98,18 +98,17 @@ function CourseDetails() {
 }
 function CourseEditSection({ fetchCourse, courseId }) {
     console.log("Update");
-    const course = useRecoilValue(courseState);
-    const [title, setTitle] = useState(course.title);
-    const [description, setDescription] = useState(course.description);
-    const [imageLink, setImageLink] = useState(course.imageLink);
-    const [price, setPrice] = useState(course.price);
-    const [published, setPublished] = useState(course.published);
+    const [title, setTitle] = useState();
+    const [description, setDescription] = useState();
+    const [imageLink, setImageLink] = useState();
+    const [price, setPrice] = useState();
+    const [published, setPublished] = useState();
     const navigate = useNavigate();
     const authHeader = {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("adminToken")}`
+            Authorization: `Bearer ${localStorage.getItem("adminToken")}`
         }
-      };
+    };
     return (
         <div
             style={{
@@ -142,7 +141,6 @@ function CourseEditSection({ fetchCourse, courseId }) {
                     onChange={(e) => {
                         setTitle(e.target.value);
                     }}
-                    value={title}
                     label="New Title"
                     variant="outlined"
                 />
@@ -155,7 +153,6 @@ function CourseEditSection({ fetchCourse, courseId }) {
                     onChange={(e) => {
                         setDescription(e.target.value);
                     }}
-                    value={description}
                     label="New Description"
                     variant="outlined"
                 />
@@ -168,7 +165,6 @@ function CourseEditSection({ fetchCourse, courseId }) {
                     onChange={(e) => {
                         setPrice(e.target.value);
                     }}
-                    value={price}
                     label="New Price"
                     variant="outlined"
                 />
@@ -178,7 +174,6 @@ function CourseEditSection({ fetchCourse, courseId }) {
                         margin: "6px",
                         width: "250px",
                     }}
-                    value={imageLink}
                     onChange={(e) => {
                         setImageLink(e.target.value);
                     }}
@@ -225,7 +220,7 @@ function CourseEditSection({ fetchCourse, courseId }) {
                         background: "#ba181b",
                     }}
                     variant="contained"
-                    onClick={async() => {
+                    onClick={async () => {
                         const response = await axios.delete(`http://localhost:3000/admin/courseDelete/${courseId}`, {
                             headers: {
                                 "Authorization": "Bearer " + localStorage.getItem("adminToken")
@@ -244,6 +239,6 @@ function CourseEditSection({ fetchCourse, courseId }) {
 }
 const courseState = atom({
     key: 'courseState',
-    default: '',
+    default: ''
 });
 export default AdminEditcourse;

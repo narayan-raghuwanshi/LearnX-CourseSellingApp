@@ -3,9 +3,14 @@ import { useEffect, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import '../../App.css';
 import axios from 'axios';
+import {userState} from "../../store/atoms/user.js"
+import { isLoadingSelector,userEmailSelector } from "../../store/selectors/user";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 function UserAppbar() {
     const navigate = useNavigate();
-    const [userEmail, setUserEmail] = useState();
+    const setUser = useSetRecoilState(userState);
+    const isLoading = useRecoilValue(isLoadingSelector);
+    const userEmail = useRecoilValue(userEmailSelector);
     useEffect(() => {
         axios.get("http://localhost:3000/users/me",{
             headers: {
@@ -16,6 +21,11 @@ function UserAppbar() {
             setUserEmail(data.username);
         })
     }, []);
+
+    if(isLoading){
+        return <></>
+    }
+
     if (userEmail) {
         return (
             <div
@@ -78,7 +88,10 @@ function UserAppbar() {
                         }}
                         onClick={() => {
                             localStorage.setItem("userToken", null);
-                            window.location = "/usersignin"
+                            setUser({
+                                isLoading: false,
+                                userEmail: null
+                            })
                         }}
                     >
                         Logout

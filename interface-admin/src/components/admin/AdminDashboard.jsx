@@ -5,42 +5,47 @@ import { Navigate, useNavigate } from "react-router-dom";
 import axios from 'axios';
 function AdminDashboard() {
     const [courses, setCourses] = useState([]);
-    const [createCourseButton, setCreateCourseButton] = useState();
     useEffect(() => {
-        axios.get("http://localhost:3000/admin/courses/",{
-            headers:{
+        axios.get("http://localhost:3000/admin/courses/", {
+            headers: {
                 Authorization: "Bearer " + localStorage.getItem("adminToken")
             }
-        }).then((response)=>{
+        }).then((response) => {
             let data = response.data;
             setCourses(data.courses);
-            setCreateCourseButton(<CreateCourseButton></CreateCourseButton>);
         })
     }, []);
-    return <div><div
-        style={{
-            display: "flex",
-            justifyContent: "center",
-            margin: "40px"
-        }}>
-        <Typography
-            style={{
-                marginTop: "10px",
-                fontSize: "2rem",
-                color: "#101128"
-            }}
-            variant="h6">
-            <b>{"Admin Dashboard"}</b>
-        </Typography>
-    </div><div style={{ marginTop: "10px", display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
-            {courses.map(eachCourse => {
-                return (<EachCourse course={eachCourse}></EachCourse>)
-            })}
-            {createCourseButton}
+    return (
+        <div>
+            <Header></Header>
+            <div style={{ marginTop: "10px", display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
+                {courses.map(eachCourse => {
+                    return (<EachCourse course={eachCourse}></EachCourse>)
+                })}
+            </div>
         </div>
-    </div>
+    )
 }
-
+function Header() {
+    return (
+        <div
+            style={{
+                display: "flex",
+                justifyContent: "center",
+                margin: "40px"
+            }}>
+            <Typography
+                style={{
+                    marginTop: "10px",
+                    fontSize: "2rem",
+                    color: "#101128"
+                }}
+                variant="h6">
+                <b>{"Admin Dashboard"}</b>
+            </Typography>
+        </div>
+    )
+}
 function EachCourse(props) {
     const navigate = useNavigate();
     return (
@@ -89,7 +94,7 @@ function EachCourse(props) {
                     }}
                     variant="contained" onClick={() => {
                         localStorage.setItem("currentCourseId", props.course.id);
-                        navigate(`editcourse/${props.course.id}`);
+                        navigate("/editcourse");
                     }}>EDIT</Button>
                 <Typography
                     style={{
@@ -106,34 +111,6 @@ function EachCourse(props) {
         </Card>
 
     );
-}
-function CreateCourseButton(props) {
-    const navigate = useNavigate();
-    return (
-        <Card
-            style={{
-                padding: "20px",
-                background: "#b7b7a42b",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                width: "280px",
-                margin: "30px",
-            }}>
-            <Button
-                style={{
-                    width: "200px",
-                    background: "#1b4332e6",
-                    alignSelf: "center",
-                    alignItems: "center",
-                    margin: "auto"
-                }}
-                variant="contained"
-                onClick={() => {
-                    navigate("/addcourse");
-                }}>Create New</Button>
-        </Card>
-    )
 }
 
 export default AdminDashboard;

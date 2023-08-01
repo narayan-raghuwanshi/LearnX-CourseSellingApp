@@ -4,10 +4,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 function AdminSignup() {
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [secretKEY, setSecretKEY] = useState("");
-  const navigate = useNavigate();
   return (
     <div
       style={{
@@ -59,7 +59,6 @@ function AdminSignup() {
               secretKEY
             })
             let data = response.data;
-            localStorage.setItem("adminToken", data.token);
             alert(data.message);
             if (data.message === 'Admin created successfully') {
               navigate("/signin")

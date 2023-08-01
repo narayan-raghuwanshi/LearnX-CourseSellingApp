@@ -1,10 +1,15 @@
 import { Button, TextField, Typography } from "@mui/material";
 import Card from "@mui/material/Card";
 import { useState } from "react";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import axios from 'axios';
+import {useSetRecoilState} from "recoil";
+import { adminState } from "../../store/atoms/admin";
 function AdminSignin() {
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const setAdmin = useSetRecoilState(adminState);
   return (
     <div
       style={{
@@ -52,7 +57,11 @@ function AdminSignin() {
             })
             let data = response.data;
             localStorage.setItem("adminToken", data.token);
-            window.location = (data.token !== undefined) ? "/courses" : "/signin";
+            setAdmin({
+              isLoading: false,
+              adminEmail: username
+            })
+            navigate("/courses");
           }}
         >
           Login

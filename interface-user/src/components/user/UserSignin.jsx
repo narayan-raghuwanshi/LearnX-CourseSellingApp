@@ -2,9 +2,14 @@ import { Button, TextField, Typography } from "@mui/material";
 import Card from "@mui/material/Card";
 import { useState } from "react";
 import axios from 'axios';
+import { userState } from "../../store/atoms/user";
+import { useSetRecoilState } from "recoil";
+import { Navigate, useNavigate } from "react-router-dom";
 function UserSignin(){
+  const navigate = useNavigate();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const setUser = useSetRecoilState(userState);
     return <div
     style={{
       marginTop: "200px",
@@ -50,7 +55,11 @@ function UserSignin(){
           })
           let data = response.data;
           localStorage.setItem("userToken", data.token);
-          window.location = (data.token!== undefined)? "/userallcourses":"/usersignin";
+          setUser({
+            isLoading: false,
+            userEmail: username
+          })
+          navigate("/userallcourses");
         }}
       >
         Login
