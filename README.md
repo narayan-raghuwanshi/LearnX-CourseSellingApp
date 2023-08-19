@@ -14,3 +14,4 @@ Introducing my creation: a dynamic course selling app powered by Node.js, Expres
 - [x] **LOGIN**: Users can log in using their registered credentials.
 - [x] **EXPLORE Courses**: Users can explore a wide range of courses.
 - [x] **PURCHASE Courses**: Users can purchase courses
+- [ Live Link ](https://youtu.be/8-rbJObShio) 
